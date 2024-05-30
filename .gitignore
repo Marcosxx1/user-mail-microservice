@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Ignore the configmap directory
+src/configmap/configmap.json
+
 ### STS ###
 .apt_generated
 .classpath

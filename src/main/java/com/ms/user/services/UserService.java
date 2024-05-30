@@ -1,4 +1,5 @@
 package com.ms.user.services;
+import java.util.List;
 
 import com.ms.user.dtos.RegisterUserRequest;
 import com.ms.user.entity.User;
@@ -9,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -16,7 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User save(RegisterUserRequest registerUserRequest) {
+    public UUID save(RegisterUserRequest registerUserRequest) {
         var existUserWithEmail = userRepository.findByEmail(registerUserRequest.email());
         if (existUserWithEmail.isPresent()) {
             throw new RuntimeException("User already registered");
@@ -24,7 +27,15 @@ public class UserService {
 
         User user = UserMapper.mapRegistrationDtoToUser(registerUserRequest);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return savedUser.getId();
+    }
 
+    public void delete(UUID id) {
+        userRepository.deleteById(id);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }
